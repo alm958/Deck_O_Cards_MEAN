@@ -7,27 +7,22 @@ function CardConstructor(suit = suit_set[Math.floor(Math.random() * suit_set.len
     this.name = this.rank + this.suit;
 };
 
-let mcard = new CardConstructor();
-console.log(mcard);
-
 function DeckConstructor(){
     this.deck = makeDeck();
     function makeDeck(){
-        let i, j, newdeck = [];
+        let i, j, ordered_deck = [];
         for (i in suit_set){
             for (j in rank_set){
-                newdeck.push(new CardConstructor(suit_set[i],rank_set[j]));
+                ordered_deck.push(new CardConstructor(suit_set[i],rank_set[j]));
             }
         }
-        return newdeck
+        return ordered_deck
     }
 }
 
-let myFirstDeck = new DeckConstructor();
-let my2ndDeck = new DeckConstructor();
-
-console.log('myFirstDeck just after creation');
-console.log(myFirstDeck);
+DeckConstructor.prototype.deal = function(){
+    return this.deck.pop();
+}
 
 DeckConstructor.prototype.shuffle = function(){
   let m, i;
@@ -43,6 +38,11 @@ DeckConstructor.prototype.shuffle = function(){
   return this;
 }
 
+let myFirstDeck = new DeckConstructor();
+let my2ndDeck = new DeckConstructor();
+
+console.log('myFirstDeck just after creation');
+console.log(myFirstDeck);
 
 
 console.log(myFirstDeck);
@@ -52,3 +52,12 @@ myFirstDeck.shuffle();
 console.log(myFirstDeck);
 console.log("my2ndDeck");
 console.log(my2ndDeck);
+
+var deltcard = my2ndDeck.deal();
+console.log(deltcard);
+console.log('2nd deak post deal');
+console.log(my2ndDeck);
+myFirstDeck.deal();
+console.log(myFirstDeck);
+myFirstDeck.deal();
+console.log(myFirstDeck);
