@@ -1,11 +1,14 @@
 const rank_set = ['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
 const suit_set = ['S','C','H','D'];
 
-function CardConstructor(suit = suit_set[Math.floor(Math.random() * 4)], rank = rank_set[Math.floor(Math.random() * 13)]){
+function CardConstructor(suit = suit_set[Math.floor(Math.random() * suit_set.length)], rank = rank_set[Math.floor(Math.random() * rank_set.length)]){
     this.suit = suit;
     this.rank = rank;
     this.name = this.rank + this.suit;
 };
+
+let mcard = new CardConstructor();
+console.log(mcard);
 
 function DeckConstructor(){
     this.deck = makeDeck();
