@@ -52,14 +52,9 @@ PlayerConstructor.prototype.initializeHand = function(initCardCount, deckName){
     return hand;
 }
 
-PlayerConstructor.prototype.updateHand = function(deckName, action = 'hit', discardIndicies = []){
-    if (action === 'hit'){
-        this.hand.push(deckName.deal())
-    }
-    if (action === 'draw'){
-        for (let i = 0; i < discardIndicies.length; i++){
-            this.hand.splice(discardIndicies[i],1,deckName.deal());
-        }
+PlayerConstructor.prototype.updateHand = function(deckName, discardIndicies){
+    for (let i = 0; i < discardIndicies.length; i++){
+        this.hand.splice(discardIndicies[i],1,deckName.deal());
     }
 }
 
@@ -75,28 +70,62 @@ $('.player').submit(function(){
     for (let i = 0; i < player.hand.length; i++){
         $('#welcome').append(` <button id='${i}'>${player.hand[i].name}</button> `);
     }
-    $('#welcome').append(`<h4>There are ${mydeck.deck.length} cards remaining in the deck.</h4><h4> You can discard as many as three cards from your hand.  Click on the cards above you would like to discard and hit the Draw button.</h4><form  class="draw" action="" method="post"><input class='draw' type="submit" name="Draw" value='Draw'></form>`);
+    $('#welcome').append(`<h4>There are ${mydeck.deck.length} cards remaining in the deck.</h4><h4> You can discard as many as three cards from your hand.  Click on the cards above you would like to discard and hit the Draw button.</h4><form action="" method="post"><input class='draw' type="submit" name="Draw" value='Draw'></form>`);
     return player
 })
 
 $(document.body).on('click', 'button' ,function(){
     $(this).addClass('discard');
-    console.log($(this).attr('id'));
-    console.log(Number($(this).attr('id')));
     discardlist.push(Number($(this).attr('id')))
-    console.log(discardlist);
 })
 
 $(document.body).on('click', '.draw' ,function(){
     event.preventDefault();
-    player.updateHand(mydeck,'draw',discardlist)
-    console.log(player.hand);
+    player.updateHand(mydeck,discardlist)
+    discardlist = [];
     $('#welcome').html('');
     $('#welcome').append(`<h4>Welcome ${player.name}.  Your hand after your draw is :`);
     for (let i = 0; i < player.hand.length; i++){
         $('#welcome').append(` <button id='${i}'>${player.hand[i].name}</button> `);
     }
     $('#welcome').append(`<h4>There are ${mydeck.deck.length} cards remaining in the deck.</h4>`);
+    dealer = new PlayerConstructor($('input').val(), 5, mydeck);
+    $('#dealer').append(`<h4>The dealer's hand as delt is:</h4>`);
+    for (let i = 0; i < dealer.hand.length; i++){
+        $('#dealer').append(` <button class='dealer' id='${i}'>${dealer.hand[i].name}</button> `);
+    }
+    $('#dealer').append(`<h4>There are ${mydeck.deck.length} cards remaining in the deck.</h4>`);
+    $('#dealer').append(`<h4>If the dealer does not already have you beat make a draw selection for the dealer.</h4><form action="" method="post"><input class='ddraw' type="submit" name="Draw" value='Draw'></form><form action="" method="post"><input class='newh' type="submit" name="Draw" value='Fold and play New Hand'></form>`);
+})
+
+$(document.body).on('click', '.ddraw' ,function(){
+    event.preventDefault();
+    dealer.updateHand(mydeck,discardlist)
+    discardlist = [];
+    $('#dealer').html('');
+    $('#dealer').append(`<h4>The dealer's hand after the draw is:</h4>`);
+    for (let i = 0; i < dealer.hand.length; i++){
+        $('#dealer').append(` <button class='dealer' id='${i}'>${dealer.hand[i].name}</button> `);
+    }
+    $('#dealer').append(`<h4>There are ${mydeck.deck.length} cards remaining in the deck.</h4>`);
+    $('#dealer').append(`<h3>No logic is implemented to determine the winner.  Evaluate the hands and Hoyle's if needed to determine the winner.</h3><form action="" method="post"><input class='newh' type="submit" name="Draw" value='Play New Hand'></form>`);
+})
+
+$(document.body).on('click', '.newh' ,function(){
+    event.preventDefault();
+    mydeck = new DeckConstructor();
+    mydeck.shuffle();
+    console.log(mydeck.deck.length);
+    player.initializeHand(5, mydeck);
+    console.log(mydeck.deck.length);
+    discardlist = [];
+    $('#welcome').html('');
+    $('#dealer').html('');
+    $('#welcome').append(`<h4>Welcome ${player.name}.  Your hand as delt is :`);
+    for (let i = 0; i < player.hand.length; i++){
+        $('#welcome').append(` <button id='${i}'>${player.hand[i].name}</button> `);
+    }
+    $('#welcome').append(`<h4>There are ${mydeck.deck.length} cards remaining in the deck.</h4><h4> You can discard as many as three cards from your hand.  Click on the cards above you would like to discard and hit the Draw button.</h4><form action="" method="post"><input class='draw' type="submit" name="Draw" value='Draw'></form>`);
 })
 
 });
