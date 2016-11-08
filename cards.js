@@ -61,7 +61,7 @@ PlayerConstructor.prototype.updateHand = function(deckName, discardIndicies){
 let mydeck = new DeckConstructor();
 
 mydeck.shuffle();
-
+console.log(mydeck);
 $('.player').submit(function(){
     event.preventDefault();
     player = new PlayerConstructor($('input').val(), 5, mydeck);
@@ -89,7 +89,7 @@ $(document.body).on('click', '.draw' ,function(){
         $('#welcome').append(` <button id='${i}'>${player.hand[i].name}</button> `);
     }
     $('#welcome').append(`<h4>There are ${mydeck.deck.length} cards remaining in the deck.</h4>`);
-    dealer = new PlayerConstructor($('input').val(), 5, mydeck);
+    dealer = new PlayerConstructor('dealer', 5, mydeck);
     $('#dealer').append(`<h4>The dealer's hand as delt is:</h4>`);
     for (let i = 0; i < dealer.hand.length; i++){
         $('#dealer').append(` <button class='dealer' id='${i}'>${dealer.hand[i].name}</button> `);
@@ -116,7 +116,7 @@ $(document.body).on('click', '.newh' ,function(){
     mydeck = new DeckConstructor();
     mydeck.shuffle();
     console.log(mydeck.deck.length);
-    player.initializeHand(5, mydeck);
+    player.hand = player.initializeHand(5, mydeck);
     console.log(mydeck.deck.length);
     discardlist = [];
     $('#welcome').html('');
