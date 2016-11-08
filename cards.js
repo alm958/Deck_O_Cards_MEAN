@@ -1,4 +1,3 @@
-
 $(document).ready(function(){
 
 const rank_set = ['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
@@ -59,7 +58,7 @@ PlayerConstructor.prototype.updateHand = function(deckName, action = 'hit', disc
     }
     if (action === 'draw'){
         for (let i = 0; i < discardIndicies.length; i++){
-            this.hand.splice(i,1,deckName.deal());
+            this.hand.splice(discardIndicies[i],1,deckName.deal());
         }
     }
 }
@@ -69,14 +68,15 @@ let mydeck = new DeckConstructor();
 mydeck.shuffle();
 
 $('.player').submit(function(){
-    var player = new PlayerConstructor($('input').val(), 5, mydeck);
+    event.preventDefault();
+    player = new PlayerConstructor($('input').val(), 5, mydeck);
     $('#welcome').html('');
     $('#welcome').append(`<h4>Welcome ${player.name}.  Your hand as delt is :`);
     for (let i = 0; i < player.hand.length; i++){
         $('#welcome').append(` <button id='${i}'>${player.hand[i].name}</button> `);
     }
     $('#welcome').append(`<h4>There are ${mydeck.deck.length} cards remaining in the deck.</h4><h4> You can discard as many as three cards from your hand.  Click on the cards above you would like to discard and hit the Draw button.</h4><form  class="draw" action="" method="post"><input class='draw' type="submit" name="Draw" value='Draw'></form>`);
-    return false;
+    return player
 })
 
 $(document.body).on('click', 'button' ,function(){
